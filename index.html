@@ -59,8 +59,8 @@
 
     .brand img {
       display: block;
-      width: 142px;
-      height: 48px;
+      width: 120px;
+      height: 60px;
       object-fit: contain;
     }
 
@@ -148,8 +148,8 @@
       }
 
       .brand img {
-        width: 128px;
-        height: 44px;
+        width: 104px;
+        height: 52px;
       }
 
       .menu-toggle {
@@ -225,7 +225,7 @@
   <header class="site-header">
     <div class="header-inner">
       <a class="brand" href="#page-1" data-page="1" aria-label="AEC home">
-        <img src="assets/aec-logo.svg" alt="AEC International">
+        <img src="assets/logo.png" alt="">
       </a>
       <button
         class="menu-toggle"
@@ -239,11 +239,11 @@
         <span></span>
       </button>
       <nav class="primary-nav" id="primary-nav" aria-label="Main navigation">
-        <a class="nav-link" href="#page-2" data-page="2">About</a>
-        <a class="nav-link" href="#page-7" data-page="7">Services</a>
-        <a class="nav-link" href="#page-12" data-page="12">Projects</a>
-        <a class="nav-link" href="#page-9" data-page="9">Awards</a>
-        <a class="nav-link" href="#page-48" data-page="48">Leadership</a>
+        <a class="nav-link" href="#page-9" data-page="9">About</a>
+        <a class="nav-link" href="#page-12" data-page="12">Services</a>
+        <a class="nav-link" href="#page-48" data-page="48">Projects</a>
+        <a class="nav-link" href="#page-6" data-page="6">Awards</a>
+        <a class="nav-link" href="#page-3" data-page="3">Leadership</a>
       </nav>
     </div>
   </header>
@@ -255,6 +255,8 @@
       src="assets/images/1.jpg"
       alt="AEC Portfolio Page 1"
       class="portfolio-page"
+      width="1920"
+      height="1080"
       loading="eager"
       fetchpriority="high"
     >
@@ -265,7 +267,7 @@
     const container = document.getElementById('portfolio');
     const menuToggle = document.getElementById('menu-toggle');
     const primaryNav = document.getElementById('primary-nav');
-    const sectionLinks = Array.from(document.querySelectorAll('[data-page]'))
+    const sectionLinks = Array.from(document.querySelectorAll('.nav-link'))
       .map((link) => ({ link, page: Number(link.dataset.page) }))
       .sort((first, second) => first.page - second.page);
 
@@ -276,6 +278,8 @@
       img.src = `assets/images/${i}.jpg`;
       img.alt = `AEC Portfolio Page ${i}`;
       img.className = 'portfolio-page';
+      img.width = 1920;
+      img.height = 1080;
       img.loading = 'lazy';
       img.decoding = 'async';
 
@@ -312,26 +316,35 @@
       }
     });
 
-    const pageObserver = new IntersectionObserver((entries) => {
-      const visiblePages = entries.filter((entry) => entry.isIntersecting);
-      if (visiblePages.length === 0) {
-        return;
+    const siteHeader = document.querySelector('.site-header');
+    const portfolioPages = Array.from(container.querySelectorAll('.portfolio-page'));
+    let activeSectionUpdatePending = false;
+
+    function updateActiveSection() {
+      const scrollPaddingTop = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+      const activationLine = window.scrollY + Math.max(
+        siteHeader.getBoundingClientRect().bottom,
+        scrollPaddingTop
+      );
+      let pageNumber = 0;
+
+      for (const page of portfolioPages) {
+        if (!page.isConnected) {
+          continue;
+        }
+        const pageTop = page.getBoundingClientRect().top + window.scrollY;
+        if (pageTop > activationLine) {
+          break;
+        }
+        pageNumber = Number(page.id.slice(5));
       }
 
-      const viewportCenter = window.innerHeight / 2;
-      const currentEntry = visiblePages.reduce((closest, entry) => {
-        const distance = Math.abs(entry.boundingClientRect.top + entry.boundingClientRect.height / 2 - viewportCenter);
-        const closestDistance = Math.abs(closest.boundingClientRect.top + closest.boundingClientRect.height / 2 - viewportCenter);
-        return distance < closestDistance ? entry : closest;
-      });
-
-      const currentPage = Number(currentEntry.target.id.slice(5));
       const currentSection = sectionLinks.reduce((active, section) => (
-        section.page <= currentPage ? section : active
-      ), sectionLinks[0]);
+        section.page <= pageNumber ? section : active
+      ), null);
 
       sectionLinks.forEach(({ link }) => {
-        const isActive = link === currentSection.link;
+        const isActive = link === currentSection?.link;
         link.classList.toggle('is-active', isActive);
         if (isActive) {
           link.setAttribute('aria-current', 'location');
@@ -339,9 +352,23 @@
           link.removeAttribute('aria-current');
         }
       });
-    }, { threshold: [0, 0.25, 0.5, 0.75, 1] });
+    }
 
-    document.querySelectorAll('.portfolio-page').forEach((page) => pageObserver.observe(page));
+    function scheduleActiveSectionUpdate() {
+      if (activeSectionUpdatePending) {
+        return;
+      }
+
+      activeSectionUpdatePending = true;
+      window.requestAnimationFrame(() => {
+        activeSectionUpdatePending = false;
+        updateActiveSection();
+      });
+    }
+
+    window.addEventListener('scroll', scheduleActiveSectionUpdate, { passive: true });
+    window.addEventListener('resize', scheduleActiveSectionUpdate);
+    updateActiveSection();
   </script>
 
 </body>
