@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AEC Portfolio</title>
-  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="icon" type="image/svg+xml" href="assets/aec-favicon.svg">
   <style>
     * {
       box-sizing: border-box;
@@ -14,7 +14,7 @@
 
     html {
       scroll-behavior: smooth;
-      scroll-padding-top: 100px;
+      scroll-padding-top: 96px;
     }
 
     body {
@@ -31,106 +31,95 @@
       top: 0;
       z-index: 10;
       width: 100%;
-      background: #fff;
-      border-top: 5px solid #272c58;
-      box-shadow: 0 8px 24px rgba(11, 15, 25, 0.16);
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid rgba(39, 44, 88, 0.12);
+      box-shadow: 0 8px 28px rgba(18, 28, 58, 0.08);
+      backdrop-filter: blur(14px);
     }
 
     .header-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
+      gap: 32px;
       width: 100%;
-      max-width: 1224px;
-      min-height: 76px;
+      max-width: 1320px;
+      min-height: 78px;
       margin: 0 auto;
-      padding: 8px 12px;
+      padding: 10px 24px;
     }
 
     .brand {
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      color: #272c58;
-      font-size: 1.05rem;
-      font-weight: 700;
+      flex: 0 0 auto;
+      border-radius: 8px;
       text-decoration: none;
     }
 
     .brand img {
       display: block;
-      width: 104px;
-      height: 52px;
+      width: 142px;
+      height: 48px;
       object-fit: contain;
     }
 
-    .presentation-controls {
+    .primary-nav {
       display: flex;
       align-items: center;
-      gap: 12px;
-      color: #272c58;
-      font-variant-numeric: tabular-nums;
+      gap: 6px;
     }
 
-    .page-count {
-      min-width: 76px;
-      text-align: center;
-      font-size: 0.9rem;
+    .nav-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      padding: 0 15px;
+      border-radius: 8px;
+      color: #46506f;
+      font-size: 0.94rem;
       font-weight: 600;
-    }
-
-    .page-count strong {
-      font-size: 1.1rem;
-    }
-
-    .page-count span {
-      color: #68708e;
-    }
-
-    .page-button {
-      display: grid;
-      width: 38px;
-      height: 38px;
-      place-items: center;
-      border: 1px solid #272c58;
-      border-radius: 50%;
-      background: #fff;
-      color: #272c58;
-      font: inherit;
-      font-size: 1.45rem;
-      line-height: 1;
-      cursor: pointer;
+      text-decoration: none;
       transition: background-color 160ms ease, color 160ms ease;
     }
 
-    .page-button:hover:not(:disabled),
-    .page-button:focus-visible:not(:disabled) {
-      background: #272c58;
-      color: #fff;
+    .nav-link:hover,
+    .nav-link:focus-visible,
+    .nav-link.is-active {
+      background: #f0f2fb;
+      color: #272c58;
     }
 
-    .page-button:focus-visible,
-    .brand:focus-visible {
+    .nav-link.is-active::after {
+      position: absolute;
+      right: 15px;
+      bottom: 5px;
+      left: 15px;
+      height: 2px;
+      border-radius: 2px;
+      background: #617bf0;
+      content: "";
+    }
+
+    .brand:focus-visible,
+    .nav-link:focus-visible,
+    .menu-toggle:focus-visible {
       outline: 3px solid #617bf0;
       outline-offset: 3px;
     }
 
-    .page-button:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-
-    .progress-track {
-      height: 4px;
-      background: #dfe3f1;
-    }
-
-    .progress-bar {
-      width: 2.08%;
-      height: 100%;
-      background: #617bf0;
-      transition: width 180ms ease;
+    .menu-toggle {
+      display: none;
+      width: 44px;
+      height: 44px;
+      place-content: center;
+      gap: 5px;
+      border: 1px solid #e1e4ef;
+      border-radius: 10px;
+      background: #fff;
+      color: #272c58;
+      cursor: pointer;
     }
 
     .portfolio-container {
@@ -152,32 +141,69 @@
       background-color: #1e293b; /* Placeholder color before image paints */
     }
 
-    @media (max-width: 540px) {
+    @media (max-width: 760px) {
       .header-inner {
-        min-height: 66px;
-      }
-
-      .brand {
-        gap: 6px;
-        font-size: 0.9rem;
-      }
-
-      .brand span {
-        display: none;
+        min-height: 72px;
+        padding: 10px 18px;
       }
 
       .brand img {
-        width: 76px;
-        height: 38px;
+        width: 128px;
+        height: 44px;
       }
 
-      .presentation-controls {
-        gap: 7px;
+      .menu-toggle {
+        display: grid;
       }
 
-      .page-button {
-        width: 34px;
-        height: 34px;
+      .menu-toggle span {
+        display: block;
+        width: 18px;
+        height: 2px;
+        border-radius: 2px;
+        background: #272c58;
+        transition: transform 160ms ease;
+      }
+
+      .menu-toggle[aria-expanded="true"] span:first-child {
+        transform: translateY(3.5px) rotate(45deg);
+      }
+
+      .menu-toggle[aria-expanded="true"] span:last-child {
+        transform: translateY(-3.5px) rotate(-45deg);
+      }
+
+      .primary-nav {
+        position: absolute;
+        top: calc(100% + 1px);
+        right: 0;
+        left: 0;
+        display: none;
+        align-items: stretch;
+        gap: 4px;
+        padding: 12px 18px 18px;
+        border-bottom: 1px solid rgba(39, 44, 88, 0.12);
+        background: #fff;
+        box-shadow: 0 16px 24px rgba(18, 28, 58, 0.1);
+      }
+
+      .primary-nav.is-open {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .nav-link {
+        min-height: 46px;
+        padding: 0 14px;
+      }
+
+      .nav-link.is-active::after {
+        top: 11px;
+        right: auto;
+        bottom: 11px;
+        left: 4px;
+        width: 3px;
+        height: auto;
       }
     }
 
@@ -198,29 +224,27 @@
 
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="#page-1" aria-label="AEC Portfolio, go to the first page">
-        <img src="assets/logo.png" alt="AEC">
-        <span>Portfolio</span>
+      <a class="brand" href="#page-1" data-page="1" aria-label="AEC home">
+        <img src="assets/aec-logo.svg" alt="AEC International">
       </a>
-      <nav class="presentation-controls" aria-label="Presentation navigation">
-        <button class="page-button" id="previous-page" type="button" aria-label="Previous page" disabled>&lsaquo;</button>
-        <p class="page-count" aria-live="polite">
-          <strong id="current-page">01</strong>
-          <span>/ <span id="total-pages">48</span></span>
-        </p>
-        <button class="page-button" id="next-page" type="button" aria-label="Next page">&rsaquo;</button>
+      <button
+        class="menu-toggle"
+        id="menu-toggle"
+        type="button"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="primary-nav"
+      >
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="primary-nav" id="primary-nav" aria-label="Main navigation">
+        <a class="nav-link" href="#page-2" data-page="2">About</a>
+        <a class="nav-link" href="#page-7" data-page="7">Services</a>
+        <a class="nav-link" href="#page-12" data-page="12">Projects</a>
+        <a class="nav-link" href="#page-9" data-page="9">Awards</a>
+        <a class="nav-link" href="#page-48" data-page="48">Leadership</a>
       </nav>
-    </div>
-    <div
-      class="progress-track"
-      id="progress-track"
-      role="progressbar"
-      aria-label="Presentation progress"
-      aria-valuemin="1"
-      aria-valuemax="48"
-      aria-valuenow="1"
-    >
-      <div class="progress-bar" id="progress-bar"></div>
     </div>
   </header>
 
@@ -239,12 +263,11 @@
   <script>
     const TOTAL_PAGES = 48;
     const container = document.getElementById('portfolio');
-    const currentPageLabel = document.getElementById('current-page');
-    const progressTrack = document.getElementById('progress-track');
-    const progressBar = document.getElementById('progress-bar');
-    const previousButton = document.getElementById('previous-page');
-    const nextButton = document.getElementById('next-page');
-    let currentPage = 1;
+    const menuToggle = document.getElementById('menu-toggle');
+    const primaryNav = document.getElementById('primary-nav');
+    const sectionLinks = Array.from(document.querySelectorAll('[data-page]'))
+      .map((link) => ({ link, page: Number(link.dataset.page) }))
+      .sort((first, second) => first.page - second.page);
 
     // Dynamically append the remaining pages with native lazy-loading
     for (let i = 2; i <= TOTAL_PAGES; i++) {
@@ -264,44 +287,28 @@
       container.appendChild(img);
     }
 
-    document.getElementById('total-pages').textContent = String(TOTAL_PAGES);
-    progressTrack.setAttribute('aria-valuemax', String(TOTAL_PAGES));
-
-    function setCurrentPage(page) {
-      currentPage = page;
-      currentPageLabel.textContent = String(page).padStart(2, '0');
-      progressTrack.setAttribute('aria-valuenow', String(page));
-      progressBar.style.width = `${(page / TOTAL_PAGES) * 100}%`;
-      previousButton.disabled = page === 1;
-      nextButton.disabled = page === TOTAL_PAGES;
+    function closeMenu() {
+      primaryNav.classList.remove('is-open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      menuToggle.setAttribute('aria-label', 'Open navigation menu');
     }
 
-    function goToPage(page) {
-      const boundedPage = Math.min(Math.max(page, 1), TOTAL_PAGES);
-      const target = document.getElementById(`page-${boundedPage}`);
-      if (!target) {
-        return;
+    menuToggle.addEventListener('click', () => {
+      const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+      primaryNav.classList.toggle('is-open', !isOpen);
+      menuToggle.setAttribute('aria-expanded', String(!isOpen));
+      menuToggle.setAttribute('aria-label', isOpen ? 'Open navigation menu' : 'Close navigation menu');
+    });
+
+    primaryNav.addEventListener('click', (event) => {
+      if (event.target.closest('a')) {
+        closeMenu();
       }
-
-      target.scrollIntoView({
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-        block: 'start'
-      });
-      setCurrentPage(boundedPage);
-    }
-
-    previousButton.addEventListener('click', () => goToPage(currentPage - 1));
-    nextButton.addEventListener('click', () => goToPage(currentPage + 1));
+    });
 
     document.addEventListener('keydown', (event) => {
-      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
-        return;
-      }
-
-      if (event.key === 'ArrowLeft') {
-        goToPage(currentPage - 1);
-      } else if (event.key === 'ArrowRight') {
-        goToPage(currentPage + 1);
+      if (event.key === 'Escape') {
+        closeMenu();
       }
     });
 
@@ -318,11 +325,23 @@
         return distance < closestDistance ? entry : closest;
       });
 
-      setCurrentPage(Number(currentEntry.target.id.slice(5)));
+      const currentPage = Number(currentEntry.target.id.slice(5));
+      const currentSection = sectionLinks.reduce((active, section) => (
+        section.page <= currentPage ? section : active
+      ), sectionLinks[0]);
+
+      sectionLinks.forEach(({ link }) => {
+        const isActive = link === currentSection.link;
+        link.classList.toggle('is-active', isActive);
+        if (isActive) {
+          link.setAttribute('aria-current', 'location');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
     }, { threshold: [0, 0.25, 0.5, 0.75, 1] });
 
     document.querySelectorAll('.portfolio-page').forEach((page) => pageObserver.observe(page));
-    setCurrentPage(1);
   </script>
 
 </body>
